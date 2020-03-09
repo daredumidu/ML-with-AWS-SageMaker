@@ -1,0 +1,40 @@
+var AWS = require('aws-sdk');
+
+exports.handler = (event) => {
+    const sagemakerruntime = new AWS.SageMakerRuntime({region: 'us-west-2'});
+    let csv = Object.values(event).join(",");
+
+    const params = {
+        Body: csv,
+        EndpointName: process.env.ENDPOINT_NAME,
+        ContentType: 'text/csv',
+        Accept: 'text/csv'
+    };
+
+    return new Promise((resolve, reject) => {
+        return sagemakerruntime.invokeEndpoint(params, (err, data) => {
+            if (err) {
+                let response = {
+                    statusCode: 400,
+                    body: JSON.stringify(err),
+                };
+                reject(response);
+            }
+            else {
+                let willSurviveResponse = 'Yes, You will Survive the Titanic!';
+                let survived = 'Yes'
+                if (JSON.parse(Buffer.from(data.Body).toString('utf8')) === 0) {
+                    survived = 'No'
+                    willSurviveResponse = 'No... Perhaps you should avoid boats.';
+                }
+                
+                let response = {
+                    statusCode: 200,
+                    survived: survived,
+                    message: willSurviveResponse,
+                };
+                resolve(response);
+            }
+        });
+    });
+};

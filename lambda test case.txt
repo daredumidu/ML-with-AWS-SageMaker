@@ -1,0 +1,12 @@
+{
+  "social_status": "10",
+  "Pclass": "2",
+  "sex": "0",
+  "age_group": "2",
+  "SibSp": "1",
+  "Parch": "0",
+  "not_alone": "1",
+  "fare_group": "1",
+  "deck": "8",
+  "Embarked": "1"
+}
